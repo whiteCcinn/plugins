@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v4/registry/consul
+module github.com/whiteCcinn/plugins/v4/registry/consul
 
 go 1.17
 

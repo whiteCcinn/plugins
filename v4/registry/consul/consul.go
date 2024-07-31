@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"os"
 	"runtime"
 	"strconv"
 	"strings"
@@ -172,6 +173,9 @@ func (c *consulRegistry) Deregister(s *registry.Service, opts ...registry.Deregi
 }
 
 func (c *consulRegistry) Register(s *registry.Service, opts ...registry.RegisterOption) error {
+	defer func() {
+		fmt.Fprintf(os.Stderr, "Register finnish\n")
+	}()
 	if len(s.Nodes) == 0 {
 		return errors.New("Require at least one node")
 	}
@@ -231,8 +235,10 @@ func (c *consulRegistry) Register(s *registry.Service, opts ...registry.Register
 			// if the err is nil we're all good, bail out
 			// if not, we don't know what the state is, so full re-register
 			if err := c.Client().Agent().PassTTL("service:"+node.Id, ""); err == nil {
+				fmt.Fprintf(os.Stderr, "c.Client().Agent().PassTTL(\"service:\"+node.Id, \"\") ok\n")
 				return nil
 			}
+			fmt.Fprintf(os.Stderr, "c.Client().Agent().PassTTL(\"service:\"+node.Id, \"\") err: %v\n", err)
 		}
 	}
 
@@ -312,6 +318,7 @@ func (c *consulRegistry) Register(s *registry.Service, opts ...registry.Register
 
 	// if the TTL is 0 we don't mess with the checks
 	if options.TTL == time.Duration(0) {
+		fmt.Fprintf(os.Stderr, "options.TTL == time.Duration(0)\n")
 		return nil
 	}
 

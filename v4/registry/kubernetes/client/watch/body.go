@@ -32,6 +32,7 @@ func (wr *bodyWatcher) Stop() {
 		return
 	default:
 		wr.stop()
+		close(wr.results)
 	}
 }
 
@@ -50,7 +51,7 @@ func (wr *bodyWatcher) stream() {
 	go func() {
 		//nolint:errcheck
 		defer wr.res.Body.Close()
-	out:
+
 		for {
 			// Read a line
 			b, err := reader.ReadBytes('\n')
@@ -68,15 +69,9 @@ func (wr *bodyWatcher) stream() {
 			if err := json.Unmarshal(b, &event); err != nil {
 				continue
 			}
-
-			select {
-			case <-wr.ctx.Done():
-				break out
-			case wr.results <- event:
-			}
+			wr.results <- event
 		}
 
-		close(wr.results)
 		// stop the watcher
 		wr.Stop()
 	}()

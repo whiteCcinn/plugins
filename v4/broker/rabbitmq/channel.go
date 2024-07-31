@@ -95,27 +95,27 @@ func (r *rabbitMQChannel) Publish(exchange, key string, message amqp.Publishing)
 	return nil
 }
 
-func (r *rabbitMQChannel) DeclareExchange(ex Exchange) error {
+func (r *rabbitMQChannel) DeclareExchange(exchange string) error {
 	return r.channel.ExchangeDeclare(
-		ex.Name,         // name
-		string(ex.Type), // kind
-		ex.Durable,      // durable
-		false,           // autoDelete
-		false,           // internal
-		false,           // noWait
-		nil,             // args
+		exchange, // name
+		"topic",  // kind
+		false,    // durable
+		false,    // autoDelete
+		false,    // internal
+		false,    // noWait
+		nil,      // args
 	)
 }
 
-func (r *rabbitMQChannel) DeclareDurableExchange(ex Exchange) error {
+func (r *rabbitMQChannel) DeclareDurableExchange(exchange string) error {
 	return r.channel.ExchangeDeclare(
-		ex.Name,         // name
-		string(ex.Type), // kind
-		true,            // durable
-		false,           // autoDelete
-		false,           // internal
-		false,           // noWait
-		nil,             // args
+		exchange, // name
+		"topic",  // kind
+		true,     // durable
+		false,    // autoDelete
+		false,    // internal
+		false,    // noWait
+		nil,      // args
 	)
 }
 

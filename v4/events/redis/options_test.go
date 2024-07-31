@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/redis/go-redis/v9"
+	"github.com/go-redis/redis/v8"
 )
 
 func Test_newUniversalClient(t *testing.T) {

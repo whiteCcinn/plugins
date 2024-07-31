@@ -5,8 +5,6 @@ import (
 	"time"
 
 	"go-micro.dev/v4/broker"
-	"go-micro.dev/v4/client"
-	"go-micro.dev/v4/server"
 )
 
 type durableQueueKey struct{}
@@ -16,8 +14,6 @@ type prefetchCountKey struct{}
 type prefetchGlobalKey struct{}
 type confirmPublishKey struct{}
 type exchangeKey struct{}
-type exchangeTypeKey struct{}
-type withoutExchangeKey struct{}
 type requeueOnErrorKey struct{}
 type deliveryMode struct{}
 type priorityKey struct{}
@@ -33,16 +29,6 @@ type userID struct{}
 type appID struct{}
 type externalAuth struct{}
 type durableExchange struct{}
-
-// ServerDurableQueue provide durable queue option for micro.RegisterSubscriber
-func ServerDurableQueue() server.SubscriberOption {
-	return setServerSubscriberOption(durableQueueKey{}, true)
-}
-
-// ServerAckOnSuccess export AckOnSuccess server.SubscriberOption
-func ServerAckOnSuccess() server.SubscriberOption {
-	return setServerSubscriberOption(ackSuccessKey{}, true)
-}
 
 // DurableQueue creates a durable queue when subscribing.
 func DurableQueue() broker.SubscribeOption {
@@ -64,6 +50,7 @@ func QueueArguments(h map[string]interface{}) broker.SubscribeOption {
 	return setSubscribeOption(queueArgumentsKey{}, h)
 }
 
+
 func RequeueOnError() broker.SubscribeOption {
 	return setSubscribeOption(requeueOnErrorKey{}, true)
 }
@@ -71,17 +58,6 @@ func RequeueOnError() broker.SubscribeOption {
 // ExchangeName is an option to set the ExchangeName.
 func ExchangeName(e string) broker.Option {
 	return setBrokerOption(exchangeKey{}, e)
-}
-
-// WithoutExchange is an option to use the rabbitmq default exchange.
-// means it would not create any custom exchange.
-func WithoutExchange() broker.Option {
-	return setBrokerOption(withoutExchangeKey{}, true)
-}
-
-// ExchangeType is an option to set the rabbitmq exchange type.
-func ExchangeType(t MQExchangeType) broker.Option {
-	return setBrokerOption(exchangeTypeKey{}, t)
 }
 
 // PrefetchCount ...
@@ -175,15 +151,4 @@ type ackSuccessKey struct{}
 // AckOnSuccess will automatically acknowledge messages when no error is returned.
 func AckOnSuccess() broker.SubscribeOption {
 	return setSubscribeOption(ackSuccessKey{}, true)
-}
-
-// PublishDeliveryMode client.PublishOption for setting message "delivery mode"
-// mode , Transient (0 or 1) or Persistent (2)
-func PublishDeliveryMode(mode uint8) client.PublishOption {
-	return func(o *client.PublishOptions) {
-		if o.Context == nil {
-			o.Context = context.Background()
-		}
-		o.Context = context.WithValue(o.Context, deliveryMode{}, mode)
-	}
 }

@@ -3,7 +3,7 @@ package stream
 import (
 	"crypto/tls"
 
-	"github.com/redis/go-redis/v9"
+	"github.com/go-redis/redis/v8"
 )
 
 // Options which are used to configure the redis stream.

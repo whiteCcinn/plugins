@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	nserver "github.com/nats-io/nats-server/v2/server"
-	"github.com/test-go/testify/require"
+	"github.com/stretchr/testify/assert"
 )
 
 func getFreeLocalhostAddress() string {
@@ -18,12 +18,10 @@ func getFreeLocalhostAddress() string {
 }
 
 func natsServer(ctx context.Context, t *testing.T, opts *nserver.Options) {
-	t.Helper()
-
 	server, err := nserver.NewServer(
 		opts,
 	)
-	require.NoError(t, err)
+	assert.NoError(t, err)
 	if err != nil {
 		return
 	}
@@ -42,7 +40,7 @@ func natsServer(ctx context.Context, t *testing.T, opts *nserver.Options) {
 
 	// second start JetStream
 	err = server.EnableJetStream(jsConf)
-	require.NoError(t, err)
+	assert.NoError(t, err)
 	if err != nil {
 		return
 	}

@@ -8,17 +8,11 @@ import (
 
 // Options which are used to configure the nats stream.
 type Options struct {
-	ClusterID             string
-	ClientID              string
-	Address               string
-	NkeyConfig            string
-	TLSConfig             *tls.Config
-	Logger                logger.Logger
-	SyncPublish           bool
-	Name                  string
-	DisableDurableStreams bool
-	Username              string
-	Password              string
+	ClusterID string
+	ClientID  string
+	Address   string
+	TLSConfig *tls.Config
+	Logger    logger.Logger
 }
 
 // Option is a function which configures options.
@@ -52,45 +46,9 @@ func TLSConfig(t *tls.Config) Option {
 	}
 }
 
-// NkeyConfig string to use when connecting to the cluster.
-func NkeyConfig(nkey string) Option {
-	return func(o *Options) {
-		o.NkeyConfig = nkey
-	}
-}
-
-// Logger sets the underlying logger.
+// Logger sets the underlyin logger
 func Logger(log logger.Logger) Option {
 	return func(o *Options) {
 		o.Logger = log
-	}
-}
-
-// SynchronousPublish allows using a synchronous publishing instead of the default asynchronous.
-func SynchronousPublish(sync bool) Option {
-	return func(o *Options) {
-		o.SyncPublish = sync
-	}
-}
-
-// Name allows to add a name to the natsjs connection.
-func Name(name string) Option {
-	return func(o *Options) {
-		o.Name = name
-	}
-}
-
-// DisableDurableStreams will disable durable streams.
-func DisableDurableStreams() Option {
-	return func(o *Options) {
-		o.DisableDurableStreams = true
-	}
-}
-
-// Authenticate authenticates the connection with the given username and password.
-func Authenticate(username, password string) Option {
-	return func(o *Options) {
-		o.Username = username
-		o.Password = password
 	}
 }
